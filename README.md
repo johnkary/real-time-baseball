@@ -27,3 +27,7 @@ Follow a baseball game in real-time. Inspired by ESPN Gamecast.
 2. Backend Game Entry: <http://localhost:3000/admin>
 3. Call the game using the backend entry forms.
 4. Watch the game by view the Gamecast.
+
+## License
+
+Real-time Baseball source code is available under the MIT License.
