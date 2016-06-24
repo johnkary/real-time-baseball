@@ -4,25 +4,37 @@
     <title>Real-Time Baseball</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font: 13px Helvetica, Arial; }
-        #messages { list-style-type: none; margin: 0; padding: 0; }
-        #messages li { padding: 5px 10px; }
-        #messages li:nth-child(odd) { background: #eee; }
+        body { font: 16px Helvetica, Arial; }
+        .events { list-style-type: none; margin: 0 0 1em; padding: 0; }
+        .events li { padding: 5px 10px; }
+        .events li:nth-child(odd) { background: #eee; }
     </style>
 </head>
 <body>
-<ul id="messages"></ul>
+<div style="background-color:lawngreen;padding:1em;">Frontend</div>
+<h3>Messages</h3>
+<ul class="events" id="messages"></ul>
+
+<h3>Pitches</h3>
+<ul class="events" id="pitches"></ul>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
     var socket = io();
-    socket.on('new-game-event', function(msg) {
-        var away = msg.score.away;
-        var home = msg.score.home;
-
+    const appendTextToList = function (id, text) {
         var c = document.createElement("li");
-        c.appendChild(document.createTextNode('Away: ' + away + ', Home: ' + home));
-        document.getElementById('messages').appendChild(c);
+        c.appendChild(document.createTextNode(text));
+        document.getElementById(id).appendChild(c);
+    };
+    socket.on('new-game-event', function(msg) {
+        var text = 'Away: ' + msg.score.away + ', Home: ' + msg.score.home;
+        appendTextToList('messages', text)
+    });
+
+    socket.on('pitches', function(pitch) {
+        console.log('Received Pitch:', pitch);
+        var text = 'Type: ' + pitch.type + ', Speed: ' + pitch.speed + 'mph';
+        appendTextToList('pitches', text);
     });
 </script>
 </body>

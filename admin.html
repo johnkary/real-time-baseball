@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+    <title>Admin: Real-Time Baseball</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font: 16px Helvetica, Arial; }
+    </style>
+</head>
+<body>
+<div style="background-color:orangered;padding:1em;">Backend</div>
+<div style="border:3px solid red;padding:2em;">
+    <form id="pitch">
+        <div>
+            <label for="pitch-type">Pitch Type:</label>
+            <select id="pitch-type" name="type">
+                <option value="fastball">Fastball</option>
+                <option value="curve">Curve</option>
+                <option value="splitter">Splitter</option>
+                <option value="slider">Slider</option>
+                <option value="knuckle">Knuckle</option>
+                <option value="changeup">Change Up</option>
+            </select>
+        </div>
+        <div>
+            <label for="pitch-speed">Speed:</label>
+            <input id="pitch-speed" type="number" name="speed">mph
+        </div>
+        <div>
+            <button type="submit">Send Pitch</button>
+        </div>
+    </form>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script>
+    var socket = io();
+    const publish = {
+        score: function (away, home) {
+            socket.emit('scores', {
+                away: away,
+                home: home
+            })
+        },
+        pitch: function (speed, coord) {
+            socket.emit('pitches', {
+                speed: speed,
+                coord: coord
+            })
+        }
+    };
+
+    /**
+     * Get object of all form values.
+     *
+     * @param form
+     * @returns {Object} with form field names as object properties with their values
+     */
+    const formValues = function (form) {
+        return $(form).serializeArray().reduce(function (carry, element) {
+            carry[element.name] = element.value;
+            return carry;
+        }, {})
+    };
+
+    // Send Pitches
+    $('#pitch').submit(function(e) {
+        let p = formValues(this);
+
+        e.preventDefault();
+        console.log('Pitch:', p);
+
+        publish.pitch(p.speed, p.type);
+        this.reset();
+    });
+</script>
+</body>
+</html>
