@@ -6,6 +6,7 @@ Follow a baseball game in real-time. Inspired by ESPN Gamecast.
 
 * RethinkDB
 * Node
+* WebSockets
 
 ## Install
 
@@ -18,3 +19,8 @@ Follow a baseball game in real-time. Inspired by ESPN Gamecast.
 
     $ rethinkdb
     $ node setup.js
+    $ node server.js
+
+## Run
+
+<http://localhost:3000/>

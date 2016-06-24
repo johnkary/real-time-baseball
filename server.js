@@ -2,23 +2,23 @@
  * Serve the latest game stats to browsers
  */
 
-var r = require('rethinkdb'),
-    sockio = require("socket.io"),
-    io = sockio.listen(app.listen(config.port), {log: false}),
-    dbName = "game",
-    tableName = "posts";
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-r.connect({ host: 'localhost', port: 28015, db: dbName }, function (err, conn) {
-    if (err) throw err;
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/index.html');
+});
 
-    r.table(tableName).changes().run(conn).then(function (cursor) {
-        cursor.each(function (err, item) {
-            if (item && item.new_val) {
-                io.sockets.emit("step", item.new_val);
-            }
-        });
-    })
-    .error(function (err) {
-        console.log("Error:", err);
+io.on('connection', function (socket) {
+    console.log('a user connected');
+    io.emit('new-game-event', { score: { away: 0, home: 1 } });
+
+    socket.on('disconnect', function () {
+        console.log('user disconnected');
     });
+});
+
+http.listen(3000, function () {
+    console.log('View in browser http://localhost:3000');
 });

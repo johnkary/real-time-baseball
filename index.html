@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+    <title>Real-Time Baseball</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font: 13px Helvetica, Arial; }
+        #messages { list-style-type: none; margin: 0; padding: 0; }
+        #messages li { padding: 5px 10px; }
+        #messages li:nth-child(odd) { background: #eee; }
+    </style>
+</head>
+<body>
+<ul id="messages"></ul>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    socket.on('new-game-event', function(msg) {
+        var away = msg.score.away;
+        var home = msg.score.home;
+
+        var c = document.createElement("li");
+        c.appendChild(document.createTextNode('Away: ' + away + ', Home: ' + home));
+        document.getElementById('messages').appendChild(c);
+    });
+</script>
+</body>
+</html>
