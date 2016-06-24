@@ -16,6 +16,12 @@ app.get('/admin', function (req, res) {
     res.sendFile(__dirname + '/admin.html');
 });
 
+// Serve backend HTML that can send game data
+app.get('/favicon-:type.ico', function (req, res) {
+    var type = req.params.type === 'frontend' ? 'frontend' : 'admin';
+    res.sendFile(__dirname + '/assets/favicon-' + type + '.ico');
+});
+
 io.on('connection', function (socket) {
     console.log('a user connected');
 
