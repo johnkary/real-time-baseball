@@ -5,6 +5,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font: 16px Helvetica, Arial; }
+        .clearfix { overflow: auto; }
     </style>
     <link rel="icon" href="assets/favicon-admin.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="assets/favicon-admin.ico" type="image/x-icon"/>
@@ -26,7 +27,14 @@
         </div>
         <div>
             <label for="pitch-speed">Speed:</label>
-            <input id="pitch-speed" type="number" name="speed">mph
+            <input id="pitch-speed" type="number" name="speed" max="125" min="1">mph
+        </div>
+        <div class="clearfix">
+            <label for="pitch-call" style="float:left;width:50px;">Called:</label>
+            <div style="float:left;width:200px;padding-left:6px;">
+                <input type="radio" id="pitch-call-strike" name="call" value="strike"> Strike<br>
+                <input type="radio" id="pitch-call-ball" name="call" value="ball"> Ball<br>
+            </div>
         </div>
         <div>
             <button type="submit">Send Pitch</button>
@@ -45,10 +53,11 @@
                 home: home
             })
         },
-        pitch: function (speed, coord) {
+        pitch: function (speed, type, call) {
             socket.emit('pitches', {
                 speed: speed,
-                coord: coord
+                type: type,
+                call: call
             })
         }
     };
@@ -73,7 +82,7 @@
         e.preventDefault();
         console.log('Pitch:', p);
 
-        publish.pitch(p.speed, p.type);
+        publish.pitch(p.speed, p.type, p.call);
         this.reset();
     });
 </script>

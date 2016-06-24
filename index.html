@@ -8,6 +8,7 @@
         .events { list-style-type: none; margin: 0 0 1em; padding: 0; }
         .events li { padding: 5px 10px; }
         .events li:nth-child(odd) { background: #eee; }
+        .clearfix { overflow: auto; }
     </style>
     <link rel="icon" href="assets/favicon-frontend.ico" type="image/x-icon"/>
     <link rel="shortcut icon" href="assets/favicon-frontend.ico" type="image/x-icon"/>
@@ -23,20 +24,17 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
     var socket = io();
-    const appendTextToList = function (id, text) {
+    const prependTextToList = function (id, text) {
         var c = document.createElement("li");
         c.appendChild(document.createTextNode(text));
-        document.getElementById(id).appendChild(c);
+        var node = document.getElementById(id);
+        node.insertBefore(c, node.firstChild);
     };
-    socket.on('new-game-event', function(msg) {
-        var text = 'Away: ' + msg.score.away + ', Home: ' + msg.score.home;
-        appendTextToList('messages', text)
-    });
 
     socket.on('pitches', function(pitch) {
         console.log('Received Pitch:', pitch);
-        var text = 'Type: ' + pitch.type + ', Speed: ' + pitch.speed + 'mph';
-        appendTextToList('pitches', text);
+        var text = 'Type: ' + pitch.type + ', Speed: ' + pitch.speed + 'mph, Call: ' + pitch.call;
+        prependTextToList('pitches', text);
     });
 </script>
 </body>
